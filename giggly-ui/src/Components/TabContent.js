@@ -4,6 +4,7 @@ import Login from "./Login"
 import Admin from "./Admin"
 import Sales from "./Sales"
 import Production from "./Production"
+import LogOut from "./LogOut"
 import {Link} from "react-router-dom";
 
 const Navbar = () => {
@@ -20,6 +21,12 @@ const Navbar = () => {
   return(
     <nav >
       <ul className= "nav-links">
+        <Link to="/Login">
+         <li>Login</li>
+        </Link>
+        <Link to="/LogOut">
+          <li>Logout</li>
+        </Link>
         <Link style={navStyle} to="/InventoryTable">
           <li>Inventory</li>
         </Link>

@@ -86,9 +86,9 @@ render() {
 
   {/*Array of truck designs used in the drop down selects on webpage*/}
   const grillDesign = [
-    {id: 'em', name: 'Select'},
-    {id: 'tr', name: 'Truck'},
-    {id: 'nb', name: 'Noteboard'}
+    {id: 'null', name: 'Select'},
+    {id: 'Truck', name: 'Truck'},
+    {id: 'Noteboard', name: 'Noteboard'}
   ];
   {/*Need this part for the actual select option*/}
   let grillDesignList = grillDesign.length > 0 && grillDesign.map((item, i) => {
@@ -97,10 +97,10 @@ render() {
 
   {/*Array of colors*/}
   const colors = [
-    {id: 'em', name: 'Select'},
-    {id: 'rd', name: 'Red'},
-    {id: 'bu', name: 'Blue'},
-    {id: 'bk', name: 'Black'}
+    {id: 'null', name: 'Select'},
+    {id: 'Red', name: 'Red'},
+    {id: 'Blue', name: 'Blue'},
+    {id: 'Black', name: 'Black'}
   ];
   let colorsList = colors.length > 0 && colors.map((item, i) => {
     return (<option key={i} value={item.name}>{item.name}</option>)
@@ -116,7 +116,7 @@ render() {
       {/*I use forms for each row of inputs to unify the spacing and positions*/}
 
 
-      <form method="POST" action="/endOfDay/update-grills" onSubmit={this.submit}>
+      <form method="POST" action="/endOfDay/update-grills">
         <div class="form-inline">
           <input className="inputStyle" name= "date" value={getDate()}></input>
         </div>

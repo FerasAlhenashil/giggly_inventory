@@ -58,7 +58,7 @@ class Feet extends React.Component{
   render(){
 
     const colors = [
-      {id: 'em', name: 'Select'},
+      {id: 'null', name: 'Select'},
       {id: 'Red', name: 'Red'},
       {id: 'Blue', name: 'Blue'},
       {id: 'Black', name: 'Black'}

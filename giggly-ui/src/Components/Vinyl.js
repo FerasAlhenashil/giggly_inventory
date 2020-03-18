@@ -57,7 +57,7 @@ class Vinyl extends React.Component{
       {id: 'gen', name: 'General'},
       {id: '105', name: '1105'},
       {id: '106', name: '1106'},
-      {id: 'lam', name: 'Laminat'},
+      {id: 'lam', name: 'Laminate'},
     ];
 
     let vinylsList = vinyls.length > 0 && vinyls.map((item, i) => {
@@ -72,11 +72,11 @@ class Vinyl extends React.Component{
         <input className="inputStyle" name= "date" value={getDate()}></input>
         </div>
 
-          <form method="POST" action="/endOfDay/update-feet">        
+          <form method="POST" action="/endOfDay/update-vinyl">        
             <div class="form-inlineEnd">
             <label for="materials">Vinyl Type: </label>
             <select id="materials"
-              name="material"
+              name="type"
               value={this.name}
               onChange={this.handleChange}>{vinylsList}</select>
             </div>

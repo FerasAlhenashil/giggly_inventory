@@ -14,10 +14,10 @@ class Skins extends React.Component{
       date: "",
       print: "",
       type: "",
-      printing: "0",
-      printingLost: "0",
-      cutting: "0",
-      cuttingLost: "0",
+      print: "0",
+      printLost: "0",
+      assembly: "0",
+      assemblyLost: "0",
       packaging: "0",
       packagingLost: "0"
     };
@@ -62,9 +62,9 @@ class Skins extends React.Component{
   render(){
 
     const walker = [
-      {id: 'em', name: 'Select'},
-      {id: 'w2', name: '2-Wheels'},
-      {id: 'w4', name: '4-Wheels'}
+      {id: 'null', name: 'Select'},
+      {id: 'Two-Wheel', name: 'Two-Wheel'},
+      {id: 'Four-Wheel', name: 'Four-Wheel'}
     ];
 
     let walkerList = walker.length > 0 && walker.map((item, i) => {
@@ -72,12 +72,12 @@ class Skins extends React.Component{
     }, this)
 
     const skin = [
-      {id: 'em', name: 'Select'},
-      {id: 'cm', name: 'Camo'},
-      {id: 'fl', name: 'Flag'},
-      {id: 'br', name: 'Bark'},
-      {id: 'fl', name: 'Flower'},
-      {id: 'wo', name: 'Wonder'}
+      {id: 'null', name: 'Select'},
+      {id: 'Military', name: 'Military'},
+      {id: 'Patriotic', name: 'Patriotic'},
+      {id: 'Barktastic', name: 'Barktastic'},
+      {id: 'Flowerific', name: 'Flowerific'},
+      {id: 'WonderFall', name: 'WonderFall'}
     ];
     let skinList = skin.length > 0 && skin.map((item, i) => {
       return (<option key={i} value={item.id}>{item.name}</option>)
@@ -95,12 +95,12 @@ class Skins extends React.Component{
         <div class="form-inline">
           <label for="skin_pattern">Skins: </label>
           <select id="skin_pattern"
-            name="print"
+            name="skin"
             value={this.name}
             onChange={this.handleChange}>{skinList}</select>
           <label for="walker_type">Walker: </label>
           <select id="walker_type"
-            name="type"
+            name="walker"
             value={this.name}
             onChange={this.handleChange}>{walkerList}</select>
         </div>
@@ -113,27 +113,27 @@ class Skins extends React.Component{
 
         <div class="form-inline">
           <label for="printing">Printing: </label>
-          <input id="printing" type="text"
-            name="printing"
+          <input id="print" type="text"
+            name="print"
             value={this.name}
             defualtValue="" maxlength="5" size="8"
             onChange={this.handleChange}/>
-          <input id="printingLost" type="text"
-            name="printingLost"
+          <input id="printLost" type="text"
+            name="printLost"
             value={this.name}
             defualtValue="" maxlength="5" size="8"
             onChange={this.handleChange}/>
         </div>
 
         <div class="form-inline">
-          <label for="trim">Assembly: </label>
-          <input id="trim" type="text"
-            name="cutting"
+          <label for="assembly">Assembly: </label>
+          <input id="assembly" type="text"
+            name="assembly"
             value={this.name}
             defualtValue="" maxlength="5" size="8"
             onChange={this.handleChange}/>
-          <input id="trimLost" type="text"
-            name="cuttingLost"
+          <input id="assemblyLost" type="text"
+            name="assemblyLost"
             value={this.name}
             defualtValue="" maxlength="5" size="8"
             onChange={this.handleChange}/>

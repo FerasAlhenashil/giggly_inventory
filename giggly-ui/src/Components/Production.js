@@ -1,8 +1,73 @@
 import React from "react"
-import "./Production.css";
+//import "./Production.css";
+import "./InventoryTable.css"
 import {Button, Form, Table} from "reactstrap"
 
-const products = [
+class Production extends React.Component{
+    constructor(props){
+      super(props);
+      
+      this.state = {
+          products:[
+            {
+            Location: '',
+            DepartmentName: '',
+            ProductName: '',
+            InDepartment: '',
+            Lost: ''
+            } 
+          ]
+      } 
+    }
+    
+    async componentDidMount() {
+      try {
+        let response = await fetch(`/inventory/fetch-in-production`)
+        let {products} = await response.json();
+        this.setState({products});
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  
+    render(){
+      console.log('in render ', this.state.products)
+        const products = this.state.products.map((item, index) =>{
+            return(
+              <tr key={index}>
+                <td > {item.Location}</td>
+                <td > {item.DepartmentName}</td>
+                <td > {item.ProductName}</td>
+                <td > {item.InDepartment}</td>
+                <td > {item.Lost}</td>
+              </tr>
+              )})
+  
+  
+      return(
+        <div className="InventoryStyle">
+        <Table >
+        <thead>
+          <tr>
+            <th>Location</th>
+            <th>Department Name</th>
+            <th>Product Name</th>
+            <th>In Department</th>
+            <th>Lost</th>
+          </tr>
+          </thead>
+          <tbody>
+          {products}
+          </tbody>
+        </Table>
+        <br />
+  
+        </div>
+      ) 
+    }
+  }
+
+/*const products = [
     {id: '0', name: 'Select'},
     {id: '1', name: 'Truck'},
     {id: '2', name: 'Noteboard'},
@@ -61,7 +126,8 @@ class Production extends React.Component{
         super(props);
         this.state = {ProductName: '',
             ProductDepartment:'' ,
-            ProductColor: ''
+            ProductColor: '',
+            productions: []
         }
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -99,7 +165,7 @@ class Production extends React.Component{
     
 
     render(){
-        const productions = this.state.productionList.map((item, index) =>{
+        let productions = this.state.productions.map((item, index) =>{
             return(
               <tr key={index}>
               <td >{item.MaterialName}</td>
@@ -109,9 +175,8 @@ class Production extends React.Component{
               )})
         return(
         <div className="productionStyle">
-           <h2 className="inventory">Productions </h2>
-
-            <Form >
+           <h2 className="inventory">Productions</h2>
+            <Form>
                 <div className="formatInlinePro">
                     <label>Products: </label>
                     <select className="fontSize" id="ProductName"  name="ProductName" onChange={(e) => this.setState({ ProductName: e.target.value })}>{productsList}</select>
@@ -144,7 +209,8 @@ class Production extends React.Component{
             </Table>
             
             </div>
-    )
-}
-}
+        )
+    }
+}*/
+
 export default Production

@@ -199,7 +199,7 @@ module.exports = class Product {
       ) AS temp \
       ON DUPLICATE KEY UPDATE InStock = InStock + temp.NumMats',
       [date, completed, "%"+walker+"%", "%"+skin+"%", "%"+nextDepartment+"%"])
-    if (department === "SkinWrapPrint"){
+    if (department === "SkinPrint"){
       return db.query( // Pre-production departmentID for Skins is 13.
         'UPDATE amounts, ( \
           SELECT ? AS Date, 13 AS DepartmentID, MatID, MaterialAmount * ? AS NumMats \
@@ -237,27 +237,16 @@ module.exports = class Product {
     }
   }
 
-  // Sets the values in amounts for the current day to be the values of the previous day
-  static rollbackAll() {
-    return db.query(
-      'UPDATE amounts, (SELECT * FROM amounts WHERE Date = \
-        (SELECT Date(CURRENT_TIMESTAMP() - INTERVAL 8 HOUR - INTERVAL 1 DAY))) AS temp \
-      SET amounts.InStock = temp.InStock, amounts.Lost = temp.Lost \
-      WHERE amounts.Date = (SELECT Date(CURRENT_TIMESTAMP() - INTERVAL 8 HOUR)) \
-        AND amounts.DepID = temp.DepID AND amounts.MatID = temp.MatID'
-    )
-  }
-  
   // Returns the amount of products that have not been discontinued and are currently ready to ship. 
   // First it finds the type and amount of materials for each product and the current amount of those  
   // materials in the ready to ship departments. Then it divides each material by the amount needed for
   // each product and returns the minimum number among the materials needed for a product.
   static fetchReadyShip() {
-    return db.query( // ReadyShip departmentID's are 34, 35, and 36.
+    return db.query( // ReadyShip departmentID's are 34, 35, and 36. (Excludes MainSkinReadyShip (37))
       'WITH temp AS ( \
         SELECT ProdID, amounts.MatID, InStock, MaterialAmount \
         FROM productmaterials INNER JOIN amounts ON productmaterials.MatID = amounts.MatID \
-        WHERE DepID IN (34, 35, 36) AND Date = (SELECT Date(CURRENT_TIMESTAMP() - INTERVAL 8 HOUR)) \
+        WHERE DepID IN (34, 35, 36) AND Date = (SELECT DATE(CURRENT_TIMESTAMP() - INTERVAL 8 HOUR)) \
       ) \
       SELECT CAST(MIN(InStock/MaterialAmount) AS int) AS ReadyShip, ProductName \
       FROM temp INNER JOIN products ON temp.ProdID = products.ProductID \
@@ -266,7 +255,28 @@ module.exports = class Product {
       ORDER BY ProductName'
     );
   }
-  
+
+  // Returns the amount of products that have not been discontinued that are in each department. 
+  // First it finds the type and amount of materials for each product and the current amount of those  
+  // materials in each department. Then it divides each material by the amount needed for
+  // each product and returns the minimum number among the materials needed for a product.
+  static fetchInProduction(){
+    return db.query( // ReadyShip departmentID's are 34-37 and Sold is 38.
+      'WITH temp AS ( \
+        SELECT ProdID, amounts.MatID, DepID, InStock, Lost, MaterialAmount \
+        FROM productmaterials INNER JOIN amounts ON productmaterials.MatID = amounts.MatID \
+        WHERE DepID NOT IN (34, 35, 36, 37, 38) AND Date = (SELECT DATE(CURRENT_TIMESTAMP() - INTERVAL 8 HOUR)) \
+      ) \
+      SELECT Location, DepartmentName, ProductName, CAST(MIN(InStock/MaterialAmount) AS INT) AS InDepartment, \
+        MAX(Lost) AS Lost \
+      FROM temp INNER JOIN products ON temp.ProdID = products.productID \
+        INNER JOIN departments ON DepartmentID = DepID \
+      WHERE Discontinued = 0 \
+      GROUP BY ProductName, DepartmentID \
+      ORDER BY Location, DepartmentName, ProductName'
+    )
+  }
+
   // Returns the type and amount of materials in a given department for a given product.
   static fetchProductionStep(name, color, department) {
     return db.query(
@@ -279,8 +289,19 @@ module.exports = class Product {
       ) \
       SELECT MaterialName, InStock, Lost \
       FROM temp INNER JOIN amounts ON temp.DepartmentID = amounts.DepID AND temp.MatID = amounts.MatID \
-      WHERE Date = (Select Date(CURRENT_TIMESTAMP() - INTERVAL 8 HOUR))',
+      WHERE Date = (Select DATE(CURRENT_TIMESTAMP() - INTERVAL 8 HOUR))',
       ["%"+name+"%", "%"+color+"%", "%"+department+"%"])
+  }
+  
+  // Sets the values in amounts for the current day to be the values of the previous day
+  static rollbackAll() {
+    return db.query(
+      'UPDATE amounts, (SELECT * FROM amounts WHERE Date = \
+        (SELECT DATE(CURRENT_TIMESTAMP() - INTERVAL 8 HOUR - INTERVAL 2 DAY))) AS temp \
+      SET amounts.InStock = temp.InStock, amounts.Lost = temp.Lost \
+      WHERE amounts.Date = (SELECT DATE(CURRENT_TIMESTAMP() - INTERVAL 24 HOUR)) \
+        AND amounts.DepID = temp.DepID AND amounts.MatID = temp.MatID'
+    )
   }
 
   static discontinue(name) {

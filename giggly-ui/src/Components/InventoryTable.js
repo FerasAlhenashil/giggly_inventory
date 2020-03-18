@@ -19,7 +19,8 @@ class InventoryTable extends React.Component{
           ReadyShip: '',
           productName: ''
           }
-        ]
+        ],
+        message: 'Loading...'
     } 
   }
   
@@ -53,11 +54,11 @@ class InventoryTable extends React.Component{
 
     return(
       <div className="InventoryStyle">
-      <Table striped bordered hover>
+      <Table >
       <thead>
         <tr>
           <th>Product Name</th>
-          <th>Ready - Ship</th>
+          <th>Ready to Ship</th>
         </tr>
         </thead>
         <tbody>
@@ -68,8 +69,8 @@ class InventoryTable extends React.Component{
       <Table striped bordered hover>
       <thead>
         <tr>
-          <th>Raw Materials</th>
-          <th>  In - Stock </th>
+          <th>Raw Material</th>
+          <th>  In Stock </th>
         </tr>
         </thead>
         <tbody>

@@ -6,8 +6,11 @@ const router = express.Router();
 
 router.get('/get-login', authController.getLogin);
 router.get('/get-signup', authController.getSignup);
-router.post('/post-login', loggedIn, authController.postLogin);
+router.post('/post-login',  authController.postLogin);
 router.post('/post-signup', authController.postSignup);
-router.post('/post-logout', authController.postLogout);
+router.get('/get-logout',   authController.postLogout);
+router.get('/checkToken', function(req, res) {
+    res.sendStatus(200);
+});
 
 module.exports = router;

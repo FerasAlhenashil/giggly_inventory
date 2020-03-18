@@ -10,28 +10,28 @@ class Sales extends React.Component{
         super(props);
          this.state = {
             productList: [],
+            productQuantity: "0"
         }
          this.products = [
-            {id: '', name: 'Select'},
-            {id: 'RedPaws', name: 'Paw Red'},
-            {id: 'BluePaws', name: 'Paw Blue'},
-            {id: 'BlackPaws', name: 'Paw Black'},
-            {id: 'RedTruck', name: 'Truck Red'},
-            {id: 'BlueTruck', name: 'Truck Blue'},
-            {id: 'BlackTruck', name: 'Truck Black'},
-            {id: 'RedNoteboard', name: 'Noteboard Red'},
-            {id: 'BlueNoteboard', name: 'Noteboard Blue'},
-            {id: 'BlackNoteboard', name: 'Noteboard Black'},
-            {id: 'WalkerTwoWheelFlowerific', name: 'Sticker Packs'},
-            {id: 'WalkerFourWheelFlowerific', name: '2-wheel Flowerific'},
-            {id: 'WalkerTwoWheelMilitary', name: '2-wheel Military'},
-            {id: 'WalkerTwoWheelPatriotic', name: '2-wheel Patriotic'},
-            {id: 'WalkerTwoWheelWonderFall', name: '2-wheel WonderFall'},
-            {id: 'WalkerTwoWheelBarktastic', name: '2-wheel Barktastic'},
-            {id: 'WalkerFourWheelBarktastic', name: '4-wheel Barktastic'},
-            {id: 'WalkerFourWheelFlowerific', name: '4-wheel Flowerific'},
-            {id: 'WalkerFourWheelWonderFall', name: '4-wheel WonderFall'},
-            {id: 'WalkerFourWheelMilitary', name: '4-wheel Military'}
+            {id: 'null', name: 'Select'},
+            {id: 'Paws, Red', name: 'Paws, Red'},
+            {id: 'Paws, Blue', name: 'Paws, Blue'},
+            {id: 'Paws, Black', name: 'Paws, Black'},
+            {id: 'Grill, Truck, Red', name: 'Grill, Truck, Red'},
+            {id: 'Grill, Truck, Blue', name: 'Grill, Truck, Blue'},
+            {id: 'Grill, Truck, Black', name: 'Grill, Truck, Black'},
+            {id: 'Grill, Noteboard, Red', name: 'Grill, Noteboard, Red'},
+            {id: 'Grill, Noteboard, Blue', name: 'Grill, Noteboard, Blue'},
+            {id: 'Grill, Noteboard, Black', name: 'Grill, Noteboard, Black'},
+            {id: 'Skin, Two-Wheel, Barktastic', name: 'Skin, Two-Wheel, Barktastic'},
+            {id: 'Skin, Two-Wheel, Flowerific', name: 'Skin, Two-Wheel, Flowerific'},
+            {id: 'Skin, Two-Wheel, Military', name: 'Skin, Two-Wheel, Military'},
+            {id: 'Skin, Two-Wheel, Patriotic', name: 'Skin, Two-Wheel, Patriotic'},
+            {id: 'Skin, Two-Wheel, WonderFall', name: 'Skin, Two-Wheel, WonderFall'},
+            {id: 'Skin, Four-Wheel, Barktastic', name: 'Skin, Four-Wheel, Barktastic'},
+            {id: 'Skin, Four-Wheel, Flowerific', name: 'Skin, Four-Wheel, Flowerific'},
+            {id: 'Skin, Four-Wheel, Military', name: 'Skin, Four-Wheel, Military'},
+            {id: 'Skin, Four-Wheel, WonderFall', name: 'Skin, Four-Wheel, WonderFall'}
         ];
 
         this.productsMenue = this.products.length > 0 && this.products.map((item, i) => {
@@ -58,9 +58,9 @@ class Sales extends React.Component{
             {method: 'POST',
             body: JSON.stringify({productList}),
             headers:{ 'Content-Type': 'application/json'}})
-        let respnseJSON = await response.json()
-        this.setState(respnseJSON)
-        console.log('in handlesubmit the response is ',respnseJSON)
+        let responseJSON = await response.json()
+        this.setState(responseJSON)
+        console.log('in handlesubmit the response is ',responseJSON)
         } catch (error){
             console.log(error)
         }

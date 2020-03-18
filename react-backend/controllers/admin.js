@@ -10,7 +10,7 @@ const bcrypt = require('bcryptjs')
 exports.getUsers = (req, res, next) => {
   User.fetchUserList()
     .then(users => {
-      res.json(users).redirect('/admin')
+      res.json(users)
     })
     .catch(err => console.log(err));
 };
@@ -18,14 +18,18 @@ exports.getUsers = (req, res, next) => {
 async function postAddUser(req, res, next){
   const username = req.body.username;
   const password = req.body.password;
+  const passwordConf = req.body.passwordConf;
   const fName = req.body.userFirstName;
   const lName = req.body.userLastName;
   const email = req.body.email;
-  const hashedPassword = await bcrypt.hash(password, 12)
-  const user = new User(username, hashedPassword, fName, lName, email, null);
-  user.save()
-    .catch(err => console.log(err))
-    res.redirect('/admin')
+
+  if (password === passwordConf){
+    const hashedPassword = await bcrypt.hash(password, 12)
+    const user = new User(username, hashedPassword, fName, lName, email, null);
+    user.save()
+      .catch(err => console.log(err))
+  }
+  res.redirect('/admin')
 };
 
 exports.postAddProduct = (req, res, next) => {

@@ -9,32 +9,45 @@ module.exports = class Material {
     return db.query('INSERT INTO materials (MaterialName) VALUES (?)', [this.name]);
   }
 
-  // Inserts a new record. Overwrites any previous record with the same date, depID, and matID.
+  // Inserts a new record. Updates any previous record with the same date, depID, and matID.
   static update(date, location, name, gain, lost) {
-    const depID = 13
-    if (name === "RedPaw" || name === "BluePay" || name === "BlackPaw" ||
-      name === "RedPawUPC" || name === "BluePayUPC" || name === "BlackPawUPC" ||
-      name === "Core" || name === "Screw" || name === "ShippingEnvelope" ||
-      name === "Blister" || name === "BlisterCard")
-      depID = 25
-    else if (name === "RedPlasticSheet" || name === "BluePlasticSheet" || name === "BlackPlasticSheet" ||
-      name === "RedTruckUPC" || name === "BlueTruckUPC" || name === "BlackTruckUPC" ||
-      name === "RedNoteboardUPC" || name === "BlueNoteboardUPC" || name === "BlackNoteboardUPC" ||
-      name === "Grommet" || name === "Velcro" || name === "TruckStickerSet" ||
-      name === "GrillBox" || name === "NoteboardSticker")
-      depID = 18
-    else if (location === "Main")
-      depID = 29
+    const DepID = 13
+    if (name === "Red Paw" || name === "Blue Paw" || name === "Black Paw" ||
+      name === "UPC, Paws, Red" || name === "UPC, Paws, Blue" || name === "UPC, Paws, Black" ||
+      name === "Core" || name === "Screw" || name === "Shipping Envelope" ||
+      name === "Blister" || name === "Blister Card") DepID = 25
+    else if (name === "Red Plastic Sheet" || name === "Blue Plastic Sheet" || name === "Black Plastic Sheet" ||
+      name === "UPC, Truck, Red" || name === "UPC, Truck, Blue" || name === "UPC, Truck, Black" ||
+      name === "UPC, Noteboard, Red" || name === "UPC, Noteboard, Blue" || name === "UPC, Noteboard, Black" ||
+      name === "Grommet" || name === "Velcro" || name === "Sticker, Truck" ||
+      name === "Grill Box" || name === "Sticker, Noteboard") DepID = 18
+    else if (location === "Main") DepID = 29
     return db.query( 
       'INSERT INTO amounts (Date, DepID, MatID, InStock, Lost) \
       SELECT * FROM ( \
-        SELECT DISTINCT ? AS Date, ? AS Department, MaterialID, ? AS InStock, ? AS Lost \
+        SELECT DISTINCT ?, ?, MatID, ? AS InStock, ? AS Lost \
         FROM departments INNER JOIN amounts ON DepartmentID = DepID \
           INNER JOIN materials ON MaterialID = MatID \
         WHERE MaterialName LIKE ? \
       ) AS temp \
-      ON DUPLICATE KEY UPDATE InStock = temp.InStock, Lost = temp.Lost',
-    [date, depID, gain, lost, name])
+      ON DUPLICATE KEY UPDATE InStock = InStock + temp.InStock, Lost = Lost + temp.Lost',
+    [date, DepID, gain, lost, name])
+  }
+
+  // Updates amounts of vinyls. Vinyls cannot be lost, only used.
+  static updateVinyl(date, name, delivered, used){
+    if (delivered === "") delivered = 0
+    if (used === "") used = 0
+    const MatID = 54
+    if (name === "1105") MatID = 55
+    else if (name === "1106") MatID = 56
+    else if (name === "Laminate") MatID = 57
+    return db.query(
+      'INSERT INTO amounts (Date, DepID, MatID, InStock, Lost) \
+      VALUES (?, 13, ?, ? - ?, 0) \
+      ON DUPLICATE KEY UPDATE InStock = InStock + ? - ?',
+      [date, MatID, delivered, used, delivered, used]
+    )
   }
 
   // Returns the amount of materials in pre-production 
@@ -42,7 +55,7 @@ module.exports = class Material {
     return db.query( // Pre-production departmentID's are 13, 18, and 25.
     'SELECT InStock, MaterialName \
     FROM amounts INNER JOIN materials ON amounts.MatID = materials.MaterialID \
-    WHERE DepID IN (13, 18, 25) AND Date = (SELECT Date(CURRENT_TIMESTAMP() - INTERVAL 8 HOUR)) \
+    WHERE DepID IN (13, 18, 25) AND Date = (SELECT DATE(CURRENT_TIMESTAMP() - INTERVAL 8 HOUR)) \
     ORDER BY MaterialName')
   }
 

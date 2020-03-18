@@ -73,9 +73,20 @@ exports.postUpdateMaterials = (req, res, next) => {
   const location = req.body.department
   const name = req.body.material
   const gain = req.body.delivered
-  const loss = req.body.deliveriesLost
+  const loss = req.body.deliveredLost
   Material
     .update(date, location, name, gain, loss)
+    .catch(err => console.log(err))
+    res.redirect('/endOfDay')
+};
+
+exports.postUpdateVinyl = (req, res, next) => {
+  const date = req.body.date
+  const type = req.body.type
+  const delivered = req.body.delivered
+  const used = req.body.used
+  Material
+    .updateVinyl(date, type, delivered, used)
     .catch(err => console.log(err))
     res.redirect('/endOfDay')
 };

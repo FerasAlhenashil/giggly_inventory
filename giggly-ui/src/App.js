@@ -8,38 +8,35 @@ import Admin from "./Components/Admin"
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import {Button} from "reactstrap";
 import EndOfDay from './Components/EndOfDay';
-let loginGate = require('./login-gate');
-sessionStorage.setItem('loggedIn', 'false')
+import isAuth from './Components/isAuth'
+import LogOut from './Components/LogOut'
+//import PrivateRoute from './Components/PrivateRoute'
+
+
 class App extends React.Component{
   constructor(){
     super()
-    this.loggedIn = sessionStorage.getItem('loggedIn') === true;
   }
+
+  
 /*This is where it starts by calling TabContent.js in Components*/
   render(){
-    if (!this.loggedIn)
       return(
         <Router>
         <div className="App">
             <TabContent />
             <Switch>
-              {/*<Route path="/" exact component={Login}/>*/}
-              <Route path="/InventoryTable" component={InventoryTable}/>
-              <Route path="/Sales" component={Sales}/>
-              <Route path="/Production" component={Production}/>
-              <Route path="/EndOfDay" component={EndOfDay}/>
-              <Route path="/Admin" component={Admin}/>
+              <Route path="/Login" component={Login}/>
+              <Route path="/InventoryTable" component={isAuth(InventoryTable)}/>
+              <Route path="/Sales" component={isAuth(Sales)}/>
+              <Route path="/Production" component={isAuth(Production)}/>
+              <Route path="/EndOfDay" component={isAuth(EndOfDay)}/>
+              <Route path="/Admin" component={isAuth(Admin)}/>
+              <Route path="/LogOut" component={isAuth(LogOut)}/>
             </Switch>
           </div>
       </Router>
     );
-   else {
-      return(
-        //login page
-        <Login/>
-      );
-    }
-
   }
 }
 

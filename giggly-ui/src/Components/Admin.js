@@ -1,6 +1,7 @@
 import React from "react";
 import "./EndOfDay.css";
 import "./App.css"
+import "./Production.css";
 import {Table, Button} from "reactstrap"
 //import {baseUrl} from '../../config.json';
 
@@ -20,25 +21,6 @@ class Admin extends React.Component{
     //this.fetch = this.fetch.bind(this)
 
   }
-
-//   handleClick() {
-//     this.setState(prevState => {
-//         return {
-//             
-//         }
-//     })
-// }
-
-  // async componentDidMount() {
-  //   try {
-  //     let response = await fetch(`/admin/get-users`);
-  //     let users = await response.json();
-  //     console.log(users);
-  //     this.setState({users});
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
 
   async handleSubmit(){
     try{
@@ -86,7 +68,7 @@ class Admin extends React.Component{
         )})
 
     const permissions = [
-      {id: 'em', name: ''},
+      {id: 'null', name: ''},
       {id: 'dm', name: 'Department Lead'},
       {id: 'ad', name: 'Administrator'}
     ];
