@@ -23,24 +23,17 @@ exports.getSignup = (req,res,next) => {
 exports.postLogin = (req, res, next) => {
   const username = req.body.username;
   const loginPassword = req.body.password;
-  console.log('post log session', username, loginPassword)
     User.findById(username) // database query
       .then(user => {
         if (!user[0]){
-          console.log('no username')
           return res.status(401)
           .json({
             error:'Incorrect email or password'
           });
         }
-        //console.log('za pass', user[0].password)
         bcrypt.compare(loginPassword, user[0].password)
         .then(doMatch => {
-          console.log('loginPassword',loginPassword)
-          console.log('DBpassword', user[0].password)
-          console.log(doMatch)
           if (!doMatch){
-            console.log('they don\'t match')
             res.status(401)
             .json({
               error:'Incorrect email or password'

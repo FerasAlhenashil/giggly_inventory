@@ -6,10 +6,9 @@ import Output from "./Output"
 import Materials from "./Materials"
 import Vinyl from "./Vinyl"
 import "./EndOfDay.css"
+var dateFormat = require('dateformat');
 
-{/*Will be moving the bulk of of EndOfDay to their own .js file.
-  will be creating Deliveries.js, Feet.js, Vinyls.js.
-  Plans for Sales.js but don't know how to implement yet*/}
+
 var date = "";
 
 class EndOfDay extends React.Component{
@@ -35,11 +34,7 @@ class EndOfDay extends React.Component{
   render(){
     return(
       <div className="endOfDayStyle">
-        
-        <div className="form-inlineEnd">
-          <label>Date: </label>
-          <input className="calender" type="date" name="submitDate" value={this.name} onChange={this.handleChange}></input>
-        </div>
+
 
         <div className="top">
           <div className="sections">
@@ -50,7 +45,6 @@ class EndOfDay extends React.Component{
               <Feet />
             </div>
 
-            {/*Will place in a dive then make it function just like Grills.js*/}
             <div>
               <Skins />
             </div>
@@ -61,8 +55,6 @@ class EndOfDay extends React.Component{
               <Vinyl />
             </div>
           </div>
-          {/*Will be adding Deliveries and Sales div at the bottom and both Will
-            reference a .js file for the functionality.*/}
           <div class="sections">
             <Output />
           </div>
@@ -76,8 +68,9 @@ class EndOfDay extends React.Component{
 }
 
 export function getDate(){
-  var getDate = date;
-  return(getDate);
+  var now = new Date();
+  let formated = dateFormat(now, "yyyy-mm-dd");
+  return formated
 }
 
 export default EndOfDay;

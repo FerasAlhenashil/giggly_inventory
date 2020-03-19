@@ -1,7 +1,6 @@
 const express = require('express');
 const authController = require('../controllers/authController');
 const isAuth = require('../middleware/is-auth')
-const loggedIn = require('../middleware/loggedIn')
 const router = express.Router();
 
 router.get('/get-login', authController.getLogin);

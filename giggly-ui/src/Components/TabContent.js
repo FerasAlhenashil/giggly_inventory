@@ -17,15 +17,20 @@ const Navbar = () => {
     fontSize: '25px'
 
   };
+  const navStyleLog ={ 
+    color: '#f2f2f2',
+    textDecoration: 'none',
+    fontFamily: 'Helvetica Neue',
+    fontWeight: 'normal',
+    fontSize: '15px'
+
+  };
 
   return(
     <nav >
       <ul className= "nav-links">
-        <Link to="/Login">
+        <Link style={navStyleLog} to="/Login">
          <li>Login</li>
-        </Link>
-        <Link to="/LogOut">
-          <li>Logout</li>
         </Link>
         <Link style={navStyle} to="/InventoryTable">
           <li>Inventory</li>
@@ -46,6 +51,9 @@ const Navbar = () => {
         <Link style={navStyle} to="/Admin">
           <li>Admin</li>
         </Link>
+        <Link style={navStyleLog} to="/LogOut">
+        <li>Logout</li>
+      </Link>
       </ul>
     </nav>
     

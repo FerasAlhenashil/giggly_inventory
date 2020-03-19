@@ -11,34 +11,36 @@ module.exports = class Material {
 
   // Inserts a new record. Updates any previous record with the same date, depID, and matID.
   static update(date, location, name, gain, lost) {
-    const DepID = 13
+    let DepID = "13"
     if (name === "Red Paw" || name === "Blue Paw" || name === "Black Paw" ||
       name === "UPC, Paws, Red" || name === "UPC, Paws, Blue" || name === "UPC, Paws, Black" ||
       name === "Core" || name === "Screw" || name === "Shipping Envelope" ||
-      name === "Blister" || name === "Blister Card") DepID = 25
-    else if (name === "Red Plastic Sheet" || name === "Blue Plastic Sheet" || name === "Black Plastic Sheet" ||
+      name === "Blister" || name === "Blister Card"){ 
+        DepID = "25"
+      } else if (name === "Red Plastic Sheet" || name === "Blue Plastic Sheet" || name === "Black Plastic Sheet" ||
       name === "UPC, Truck, Red" || name === "UPC, Truck, Blue" || name === "UPC, Truck, Black" ||
       name === "UPC, Noteboard, Red" || name === "UPC, Noteboard, Blue" || name === "UPC, Noteboard, Black" ||
       name === "Grommet" || name === "Velcro" || name === "Sticker, Truck" ||
-      name === "Grill Box" || name === "Sticker, Noteboard") DepID = 18
-    else if (location === "Main") DepID = 29
+      name === "Grill Box" || name === "Sticker, Noteboard"){
+       DepID = "18"
+      } else if (location === "Main") {
+        DepID = "29"
+      }
     return db.query( 
       'INSERT INTO amounts (Date, DepID, MatID, InStock, Lost) \
       SELECT * FROM ( \
-        SELECT DISTINCT ?, ?, MatID, ? AS InStock, ? AS Lost \
+        SELECT DISTINCT ?, ?, MatID, ? AS MatsInStock, ? AS MatsLost \
         FROM departments INNER JOIN amounts ON DepartmentID = DepID \
           INNER JOIN materials ON MaterialID = MatID \
         WHERE MaterialName LIKE ? \
       ) AS temp \
-      ON DUPLICATE KEY UPDATE InStock = InStock + temp.InStock, Lost = Lost + temp.Lost',
+      ON DUPLICATE KEY UPDATE InStock = InStock + temp.MatsInStock, Lost = Lost + temp.MatsLost',
     [date, DepID, gain, lost, name])
   }
 
   // Updates amounts of vinyls. Vinyls cannot be lost, only used.
   static updateVinyl(date, name, delivered, used){
-    if (delivered === "") delivered = 0
-    if (used === "") used = 0
-    const MatID = 54
+    let MatID = 54
     if (name === "1105") MatID = 55
     else if (name === "1106") MatID = 56
     else if (name === "Laminate") MatID = 57

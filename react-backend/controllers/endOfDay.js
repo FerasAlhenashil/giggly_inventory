@@ -2,6 +2,8 @@ const Material = require('../models/material');
 const Product = require('../models/product');
 
 exports.postUpdateGrills = (req, res, next) => {
+  console.log(req.body, "#########################################################",
+    "###############################################")
   const date = req.body.date
   const design = req.body.design
   const color = req.body.color
@@ -69,11 +71,12 @@ exports.postUpdateSkins = (req, res, next) => {
 };
 
 exports.postUpdateMaterials = (req, res, next) => {
+  console.log(req.body)
   const date = req.body.date
-  const location = req.body.department
-  const name = req.body.material
-  const gain = req.body.delivered
-  const loss = req.body.deliveredLost
+  const location = req.body.location
+  const name = req.body.name
+  const gain = req.body.gain
+  const loss = req.body.loss
   Material
     .update(date, location, name, gain, loss)
     .catch(err => console.log(err))

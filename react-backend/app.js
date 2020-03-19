@@ -1,13 +1,11 @@
 let createError = require('http-errors');
 let express = require('express');
 let app = express();
-const bodyParser = require('body-parser')
 let path = require('path');
 let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 
 let indexRouter = require('./routes/index');
-let usersRouter = require('./routes/users');
 let loginRouter = require('./routes/login');
 let endOfDayRouter = require('./routes/endOfDay');
 let adminRouter = require('./routes/admin');
@@ -30,7 +28,6 @@ app.use('/endOfDay', endOfDayRouter);
 app.use('/admin', adminRouter);
 app.use('/inventory', inventoryRouter);
 app.use('/App', indexRouter);
-//app.use('/users', usersRouter);
 
 
 // catch 404 and forward to error handler

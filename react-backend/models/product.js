@@ -131,7 +131,7 @@ module.exports = class Product {
         ) AS temp  \
         SET amounts.Lost = amounts.Lost + ? \
         WHERE amounts.Date = temp.Date AND amounts.DepID = temp.DepartmentID AND amounts.MatID = temp.MatID',
-        [date, "%paw%", "%"+color+"%", "%"+department+"%", "%blistercard%", lost])
+        [date, "%paw%", "%"+color+"%", "%"+department+"%", "%blister card%", lost])
       return db.query( // Pre-production departmentID for Feet is 25.
         'UPDATE amounts, ( \
           SELECT ? AS Date, 25 AS DepartmentID, MatID, MaterialAmount * ? AS NumMats \
@@ -143,7 +143,7 @@ module.exports = class Product {
         ) AS temp  \
         SET amounts.InStock = amounts.InStock + temp.NumMats \
         WHERE amounts.Date = temp.Date AND amounts.DepID = temp.DepartmentID AND amounts.MatID = temp.MatID',
-        [date, lost, "%paw%", "%"+color+"%", "%blistercard%"])
+        [date, lost, "%paw%", "%"+color+"%", "%blister card%"])
     } else {
       db.query(
         'UPDATE amounts, ( \
@@ -217,7 +217,7 @@ module.exports = class Product {
             INNER JOIN products ON productmaterials.ProdID = products.ProductID \
             INNER JOIN materials ON productmaterials.MatID = materials.MaterialID \
           WHERE ProductName LIKE ? AND ProductName LIKE ? AND DepartmentName LIKE ? \
-            AND MaterialName LIKE ? AND MaterialName LIKE ? AND MaterialName LIKE "%skin%" \
+            AND MaterialName LIKE ? AND MaterialName LIKE ? AND MaterialName NOT LIKE "%UPC%" \
         ) AS temp  \
         SET amounts.Lost = amounts.Lost + ? \
         WHERE amounts.Date = temp.Date AND amounts.DepID = temp.DepartmentID AND amounts.MatID = temp.MatID',
@@ -228,7 +228,7 @@ module.exports = class Product {
           FROM productmaterials INNER JOIN products ON productmaterials.ProdID = products.ProductID \
           WHERE ProductName LIKE ? AND ProductName LIKE ? AND MatID NOT IN ( \
             SELECT MaterialID FROM materials \
-            WHERE MaterialName LIKE ? AND MaterialName LIKE ? AND MaterialName LIKE "%skin%" \
+            WHERE MaterialName LIKE ? AND MaterialName LIKE ? AND MaterialName NOT LIKE "%UPC%" \
           ) \
         ) AS temp  \
         SET amounts.InStock = amounts.InStock + temp.NumMats \
@@ -297,9 +297,9 @@ module.exports = class Product {
   static rollbackAll() {
     return db.query(
       'UPDATE amounts, (SELECT * FROM amounts WHERE Date = \
-        (SELECT DATE(CURRENT_TIMESTAMP() - INTERVAL 8 HOUR - INTERVAL 2 DAY))) AS temp \
+        (SELECT DATE(CURRENT_TIMESTAMP() - INTERVAL 8 HOUR - INTERVAL 1 DAY))) AS temp \
       SET amounts.InStock = temp.InStock, amounts.Lost = temp.Lost \
-      WHERE amounts.Date = (SELECT DATE(CURRENT_TIMESTAMP() - INTERVAL 24 HOUR)) \
+      WHERE amounts.Date = (SELECT DATE(CURRENT_TIMESTAMP() - INTERVAL 8 HOUR)) \
         AND amounts.DepID = temp.DepID AND amounts.MatID = temp.MatID'
     )
   }

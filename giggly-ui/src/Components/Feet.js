@@ -11,7 +11,7 @@ class Feet extends React.Component{
     super(props);
     this.state = {
       design: "",
-      color: "",
+      color: "Red",
       trim: "0",
       trimLost: "0",
       assembly: "0",
@@ -19,10 +19,44 @@ class Feet extends React.Component{
       packaging: "0",
       packagingLost: "0"
     };
-
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.submit = this.submit.bind(this);
     this.sendToSummary = this.sendToSummary.bind(this);
+  }
+
+  async handleSubmit(){
+    this.submit();
+    try{
+        let url ='/endOfDay/update-feet'
+        let date = getDate();
+        let design = this.state.design;
+        let color = this.state.color;
+        let trim = this.state.trim;
+        let trimLost = this.state.trimLost;
+        let assembly = this.state.assembly;
+        let assemblyLost = this.state.assemblyLost;
+        let packaging = this.state.packaging;
+        let packagingLost = this.state.packagingLost;
+        let response = await fetch(url,
+        {method: 'POST',
+          body: JSON.stringify({date: date,
+          design: design,
+          color: color,
+          trim: trim,
+          trimLost: trimLost,
+          assembly: assembly,
+          assemblyLost: assemblyLost,
+          packaging: packaging,
+          packagingLost: packagingLost
+        }),
+        headers:{ 'Content-Type': 'application/json'}})
+        let respnseJSON = await response.json()
+        this.setState(respnseJSON)
+        console.log('in handlesubmit the response is ',respnseJSON)
+    } catch(error){
+      console.log(error)
+    }
   }
 
   sendToSummary(message){
@@ -30,24 +64,19 @@ class Feet extends React.Component{
   }
 
   submit(event){
-    event.preventDefault();
+
     var title = "Summary"
     var date = getDate();
+    var mColor = "Color: " + this.state.color;
     var mTrim= "Trim: Completed: " + this.state.trim + ". Lost: " + this.state.trimLost;
-    var mAssembly= "assembly: Completed: " + this.state.assembly + ". Lost: " + this.state.assemblyLost;
+    var mAssembly= "Sssembly: Completed: " + this.state.assembly + ". Lost: " + this.state.assemblyLost;
     var mPackaging= "Packaging: Completed: " + this.state.packaging + ". Lost: " + this.state.packagingLost;
-    var message= title +"\n"+ date + "\n"+mTrim+"\n"+mAssembly+"\n"+mPackaging;
-    var show = "Puppy|" + this.state.color+ "|T:" + this.state.trim + "-" + this.state.trimLost + "|S:" + this.state.assembly + "-" + this.state.assemblyLost + "|P:" + this.state.packaging + "-" + this.state.packagingLost;
+    var message= title +"\n"+ date + "\n" + mColor + "\n"+mTrim+"\n"+mAssembly+"\n"+mPackaging;
+    var show = "Feet | " + this.state.color+ " | Trm:" + this.state.trim + "-" + this.state.trimLost + " | Asm:" + this.state.assembly + "-" + this.state.assemblyLost + " | Pac:" + this.state.packaging + "-" + this.state.packagingLost;
     {/*This shows the alert with the summary*/}
     alert(message)
     {/*If click confirm add to database, click deny will not*/}
     {/*Will try to send data to the Output function here when confirm is selected*/}
-    confirmAlert({
-      title: 'Confirm Add',
-      message: 'Do you want to add to inventory',
-      buttons: [{label: 'Confim', onClick: () => this.sendToSummary(show)
-      },{label: 'Deny'}]
-    })
   }
 
   handleChange(evt){
@@ -58,7 +87,6 @@ class Feet extends React.Component{
   render(){
 
     const colors = [
-      {id: 'null', name: 'Select'},
       {id: 'Red', name: 'Red'},
       {id: 'Blue', name: 'Blue'},
       {id: 'Black', name: 'Black'}
@@ -73,11 +101,7 @@ class Feet extends React.Component{
 
       <div>
         <h2 className="inventory">Feet</h2>
-        <form method="POST" action="/endOfDay/update-feet">
-          <div className="form-inlineEnd">
-            <input className="inputStyle" name= "date" value={getDate()}></input>
-          </div>
-
+        <form>
           <div className="form-inlineEnd">
             <label for="puppy_color">Colors: </label>
             <select id="puppy_color"
@@ -132,7 +156,7 @@ class Feet extends React.Component{
             defualtValue="" maxlength="10" size="8"
             onChange={this.handleChange}/>
           </div>
-          <Button type="submit" onClick={this.submit}>Add</Button>
+          <Button onClick={this.handleSubmit}>Add</Button>
         </form>
 
       </div>
